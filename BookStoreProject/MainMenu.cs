@@ -37,7 +37,7 @@ namespace BookStoreProject
             switch (choice)
             {
                 case "1":
-                    await ListAllBooksGlobal();
+                    await ListAllBooks();
                     break;
                 case "2":
                     await ShowStoreInventoryFlow();
@@ -54,7 +54,7 @@ namespace BookStoreProject
                     await ListAllStores();
                     break;
                 case "6":
-                    Console.WriteLine("Exiting application...");
+                    Console.WriteLine("Exiting application");
                     return false;
                 default:
                     Console.WriteLine("Invalid choice");
@@ -63,38 +63,27 @@ namespace BookStoreProject
             return true;
         }
 
-
-
-        async Task ListAllBooksGlobal()
+        async Task ListAllBooks()
         {
-            Console.WriteLine("--- GLOBAL BOOK CATALOG ---");
+            Console.WriteLine("--- BOOK CATALOG ---");
             var books = await _dbService.GetAllBooks();
             var authors = await _dbService.GetAllAuthors();
-
-            if (!books.Any())
+            Console.WriteLine("            ID | Title | Author           ");
+            Console.WriteLine("------------------------------------------");
+            foreach (var book in books)
             {
-                Console.WriteLine("The book catalog is empty.");
-            }
-            else
-            {
-                Console.WriteLine("ID | Title | Author");
-                Console.WriteLine("------------------------------------------");
-                foreach (var book in books)
+                var chosenAuthor = authors.FirstOrDefault(a => a.AuthorId == book.AuthorId);
+                string authorName;
+                if (chosenAuthor != null)
                 {
-                    var chosenAuthor = authors.FirstOrDefault(a => a.AuthorId == book.AuthorId);
-                    string authorName;
-                    if (chosenAuthor != null)
-                    {
-                        string firstName = chosenAuthor.FirstName;
-                        string lastName = chosenAuthor.LastName;
+                    string firstName = chosenAuthor.FirstName;
+                    string lastName = chosenAuthor.LastName;
 
-                        authorName = firstName + " " + lastName;
-                    }
-                   
+                    authorName = firstName + " " + lastName;
                 }
+
             }
         }
-
         async Task ListAllStores()
         {
             Console.WriteLine("--- ALL BOOKSTORES ---");
@@ -166,21 +155,20 @@ namespace BookStoreProject
             if (!int.TryParse(Console.ReadLine(), out int amount) || amount <= 0)
             {
                 Console.WriteLine("Invalid amount. Must be a positive integer.");
-                Pause();
                 return;
             }
 
             try
             {
                 await _dbService.AddToBookStore(storeId, bookId, amount);
-                Console.WriteLine($"\n✅ Successfully added {amount} copies of Book ID {bookId} to Store ID {storeId}.");
+                Console.WriteLine($"\n Successfully added {amount} copies of Book ID {bookId} to Store ID {storeId}.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"\n❌ An error occurred while adding to inventory: {ex.Message}");
             }
 
-            Pause();
+         
         }
 
 
@@ -196,7 +184,6 @@ namespace BookStoreProject
             if (!int.TryParse(Console.ReadLine(), out int bookId))
             {
                 Console.WriteLine("Invalid Book ID.");
-                Pause();
                 return;
             }
 
@@ -206,16 +193,16 @@ namespace BookStoreProject
 
                 if (success)
                 {
-                    Console.WriteLine($"\n✅ Successfully removed item Book ID {bookId} from Store ID {storeId}.");
+                    Console.WriteLine($"\n Successfully removed item Book ID {bookId} from Store ID {storeId}.");
                 }
                 else
                 {
-                    Console.WriteLine($"\n⚠️ Item Book ID {bookId} not found in Store ID {storeId}'s inventory.");
+                    Console.WriteLine($"\n Item Book ID {bookId} not found in Store ID {storeId}'s inventory.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"\n❌ An error occurred while removing from inventory: {ex.Message}");
+                Console.WriteLine($"\n An error occurred while removing from inventory: {ex.Message}");
             }
 
             Pause();
@@ -236,7 +223,7 @@ namespace BookStoreProject
 
         private async Task<int> SelectBookId()
         {
-            await ListAllBooksGlobal();
+            await ListAllBooks();
             Console.Write("\nEnter Book ID to select: ");
             if (!int.TryParse(Console.ReadLine(), out int bookId))
             {

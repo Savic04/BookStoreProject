@@ -35,10 +35,7 @@ namespace BookStoreProject
      
         public async Task<List<Inventory>> GetStoreInventories(int storeId)
         {
-            return await _context.Inventorys
-                .Where(i => i.StoreId == storeId)
-                .Include(i => i.Book)
-                .ToListAsync();
+            return await _context.Inventorys.Where(i => i.StoreId == storeId).Include(i => i.Book).ToListAsync();
         }
 
        
@@ -60,8 +57,7 @@ namespace BookStoreProject
         public async Task<bool> RemoveFromInventory(int storeId, int bookId)
         {
   
-            var item = await _context.Inventorys
-                .FirstOrDefaultAsync(i => i.StoreId == storeId && i.BookId == bookId);
+            var item = await _context.Inventorys.FirstOrDefaultAsync(i => i.StoreId == storeId && i.BookId == bookId);
 
             if (item == null)
             {
