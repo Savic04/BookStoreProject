@@ -19,7 +19,7 @@ namespace BookStoreProject
 
                 running = await menu.LobbyMenuAsync();
             }
-            Console.WriteLine("Application closed. Goodbye!");
+            Console.WriteLine(" Bye Bye ");
         }
     }
 }

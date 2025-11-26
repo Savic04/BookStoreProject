@@ -15,12 +15,12 @@ namespace BookStoreProject
             _dbService = dbService;
         }
 
-        // Huvudmenyns loop
+        // MainMenu loop
         public async Task<bool> LobbyMenuAsync()
         {
             Console.Clear();
             Console.WriteLine("==================================================");
-            Console.WriteLine("=        BOOKSTORE INVENTORY MANAGEMENT        =");
+            Console.WriteLine("=        BOOKSTORE ADMIN TOOLS       =");
             Console.WriteLine("==================================================");
             Console.WriteLine("[1]. List all books in the catalog (Global)");
             Console.WriteLine("[2]. Show inventory for a specific store");
@@ -57,8 +57,7 @@ namespace BookStoreProject
                     Console.WriteLine("Exiting application...");
                     return false;
                 default:
-                    Console.WriteLine("Invalid choice. Press any key to continue.");
-                    Console.ReadKey();
+                    Console.WriteLine("Invalid choice");
                     break;
             }
             return true;
@@ -83,11 +82,17 @@ namespace BookStoreProject
                 foreach (var book in books)
                 {
                     var chosenAuthor = authors.FirstOrDefault(a => a.AuthorId == book.AuthorId);
-                    string authorName = (chosenAuthor != null) ? $"{chosenAuthor.FirstName} {chosenAuthor.LastName}" : "Unknown Author";
-                    Console.WriteLine($"{book.BookId,-2} | {book.Title,-30} | {authorName}");
+                    string authorName;
+                    if (chosenAuthor != null)
+                    {
+                        string firstName = chosenAuthor.FirstName;
+                        string lastName = chosenAuthor.LastName;
+
+                        authorName = firstName + " " + lastName;
+                    }
+                   
                 }
             }
-            Pause();
         }
 
         async Task ListAllStores()
@@ -97,7 +102,7 @@ namespace BookStoreProject
 
             if (!stores.Any())
             {
-                Console.WriteLine("No stores found in the database.");
+                Console.WriteLine("No stores found");
             }
             else
             {
@@ -121,18 +126,18 @@ namespace BookStoreProject
             var stores = await _dbService.GetAllStores();
             var selectedStore = stores.FirstOrDefault(s => s.StoreId == storeId);
             string storeName = selectedStore?.StoreName ?? $"Store ID {storeId}";
-
-            Console.WriteLine($"\nINVENTORY FOR {storeName.ToUpper()}");
+          
+            Console.WriteLine($"\nINVENTORY FOR {storeName}");
             Console.WriteLine("------------------------------------------");
 
             if (!inventory.Any())
             {
-                Console.WriteLine($"The store '{storeName}' has no books in stock.");
+                Console.WriteLine($"The store {storeName} has no books in stock.");
             }
             else
             {
-                Console.WriteLine("Book ID | Title | Amount in Stock");
-                Console.WriteLine("------------------------------------------");
+                Console.WriteLine("-Book ID | Title | Amount in Stock-");
+                Console.WriteLine("-----------------------------------");
 
                 foreach (var item in inventory)
                 {
