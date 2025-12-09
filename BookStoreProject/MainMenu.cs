@@ -96,7 +96,7 @@ namespace BookStoreProject
            
         }
 
-        public async Task ShowInentory()
+        public async Task ShowInentory() 
         {
             Console.WriteLine("--- VIEW STORE INVENTORY ---");
 
