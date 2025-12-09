@@ -18,11 +18,10 @@ namespace BookStoreProject
         // MainMenu loop
         public async Task<bool> LobbyMenuAsync()
         {
-            Console.Clear();
             Console.WriteLine("==================================================");
             Console.WriteLine("=        BOOKSTORE ADMIN TOOLS       =");
             Console.WriteLine("==================================================");
-            Console.WriteLine("[1]. List all books in the catalog (Global)");
+            Console.WriteLine("[1]. List all books in the Avalible");
             Console.WriteLine("[2]. Show inventory for a specific store");
             Console.WriteLine("[3]. Add book to store inventory");
             Console.WriteLine("[4]. Remove book from store inventory");
@@ -40,7 +39,7 @@ namespace BookStoreProject
                     await ListAllBooks();
                     break;
                 case "2":
-                    await ShowStoreInventoryFlow();
+                    await ShowInentory();
                     break;
                 case "3":
                    
@@ -80,31 +79,24 @@ namespace BookStoreProject
                     string lastName = chosenAuthor.LastName;
 
                     authorName = firstName + " " + lastName;
+                    Console.WriteLine($"{book.AuthorId} | {book.Title} | {authorName} | Amount of copies: ");
                 }
-
             }
+            Console.ReadKey();
         }
         async Task ListAllStores()
         {
             Console.WriteLine("--- ALL BOOKSTORES ---");
             var stores = await _dbService.GetAllStores();
 
-            if (!stores.Any())
-            {
-                Console.WriteLine("No stores found");
-            }
-            else
-            {
                 foreach (var store in stores)
                 {
-
                     Console.WriteLine($"[ID: {store.StoreId}] Name: {store.StoreName}, City: {store.City}");
                 }
-            }
-            Pause();
+           
         }
 
-        public async Task ShowStoreInventoryFlow()
+        public async Task ShowInentory()
         {
             Console.WriteLine("--- VIEW STORE INVENTORY ---");
 
@@ -118,24 +110,15 @@ namespace BookStoreProject
           
             Console.WriteLine($"\nINVENTORY FOR {storeName}");
             Console.WriteLine("------------------------------------------");
+            Console.WriteLine("-Book ID | Title | Amount in Stock-");
+            Console.WriteLine("-----------------------------------");
 
-            if (!inventory.Any())
-            {
-                Console.WriteLine($"The store {storeName} has no books in stock.");
-            }
-            else
-            {
-                Console.WriteLine("-Book ID | Title | Amount in Stock-");
-                Console.WriteLine("-----------------------------------");
-
-                foreach (var item in inventory)
-                {
- 
-                    string title = item.Book?.Title ?? "Title Missing";
-                    Console.WriteLine($"{item.BookId,-7} | {title,-20} | {item.Amount}");
-                }
-            }
-            Pause();
+             foreach (var item in inventory)
+             {
+                 string title = item.Book?.Title ?? "Title Missing";
+                 Console.WriteLine($"{item.BookId} | {title} | {item.Amount}");
+             }
+   
         }
 
   
@@ -154,7 +137,7 @@ namespace BookStoreProject
             Console.Write("Enter Amount to add: ");
             if (!int.TryParse(Console.ReadLine(), out int amount) || amount <= 0)
             {
-                Console.WriteLine("Invalid amount. Must be a positive integer.");
+                Console.WriteLine("Invalid amount.");
                 return;
             }
 
@@ -165,12 +148,9 @@ namespace BookStoreProject
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"\n❌ An error occurred while adding to inventory: {ex.Message}");
+                Console.WriteLine($"\n An error occurred while adding to inventory: {ex.Message}");
             }
-
-         
         }
-
 
 
         public async Task RemoveBookFromStoreInventoryFlow()
@@ -193,19 +173,17 @@ namespace BookStoreProject
 
                 if (success)
                 {
-                    Console.WriteLine($"\n Successfully removed item Book ID {bookId} from Store ID {storeId}.");
+                    Console.WriteLine($"\n Successfully deleted item Book ID {bookId} from Store ID {storeId}.");
                 }
                 else
                 {
-                    Console.WriteLine($"\n Item Book ID {bookId} not found in Store ID {storeId}'s inventory.");
+                    Console.WriteLine($"\n Item Book ID {bookId} not found in Store ID {storeId} inventory.");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"\n An error occurred while removing from inventory: {ex.Message}");
             }
-
-            Pause();
         }
 
 
@@ -231,12 +209,6 @@ namespace BookStoreProject
                 return 0;
             }
             return bookId;
-        }
-
-        private void Pause()
-        {
-            Console.WriteLine("\nPress any key to return to the main menu...");
-            Console.ReadKey();
         }
     }
 }
