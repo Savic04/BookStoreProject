@@ -18,16 +18,16 @@ namespace BookStoreProject
         // MainMenu loop
         public async Task<bool> LobbyMenuAsync()
         {
-            Console.WriteLine("==================================================");
-            Console.WriteLine("=        BOOKSTORE ADMIN TOOLS       =");
-            Console.WriteLine("==================================================");
+            Console.WriteLine("========================================");
+            Console.WriteLine("=         BOOKSTORE ADMIN TOOL         =");
+            Console.WriteLine("========================================");
             Console.WriteLine("[1]. List all books in the Avalible");
             Console.WriteLine("[2]. Show inventory for a specific store");
             Console.WriteLine("[3]. Add book to store inventory");
             Console.WriteLine("[4]. Remove book from store inventory");
             Console.WriteLine("[5]. List all Stores");
             Console.WriteLine("[6]. Exit application");
-            Console.WriteLine("==================================================");
+            Console.WriteLine("=========================================");
             Console.Write("Choose an option: ");
 
             var choice = Console.ReadLine();
@@ -56,7 +56,7 @@ namespace BookStoreProject
                     Console.WriteLine("Exiting application");
                     return false;
                 default:
-                    Console.WriteLine("Invalid choice");
+                    Console.WriteLine("Wrong choice");
                     break;
             }
             return true;
@@ -64,7 +64,7 @@ namespace BookStoreProject
 
         async Task ListAllBooks()
         {
-            Console.WriteLine("--- BOOK CATALOG ---");
+            Console.WriteLine(" BOOK CATALOG ");
             var books = await _dbService.GetAllBooks();
             var authors = await _dbService.GetAllAuthors();
             Console.WriteLine("            ID | Title | Author           ");
@@ -79,14 +79,14 @@ namespace BookStoreProject
                     string lastName = chosenAuthor.LastName;
 
                     authorName = firstName + " " + lastName;
-                    Console.WriteLine($"{book.AuthorId} | {book.Title} | {authorName} | Amount of copies: ");
+                    Console.WriteLine($"{book.AuthorId} | {book.Title} | {authorName} ");
                 }
             }
             Console.ReadKey();
         }
         async Task ListAllStores()
         {
-            Console.WriteLine("--- ALL BOOKSTORES ---");
+            Console.WriteLine(" ALL BOOKSTORES ");
             var stores = await _dbService.GetAllStores();
 
                 foreach (var store in stores)
@@ -98,7 +98,7 @@ namespace BookStoreProject
 
         public async Task ShowInentory() 
         {
-            Console.WriteLine("--- VIEW STORE INVENTORY ---");
+            Console.WriteLine(" VIEW STORE INVENTORY ");
 
             var storeId = await SelectStoreId();
             if (storeId == 0) return;
@@ -109,9 +109,9 @@ namespace BookStoreProject
             string storeName = selectedStore?.StoreName ?? $"Store ID {storeId}";
           
             Console.WriteLine($"\nINVENTORY FOR {storeName}");
-            Console.WriteLine("------------------------------------------");
+            Console.WriteLine("===================================");
             Console.WriteLine("-Book ID | Title | Amount in Stock-");
-            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("====================================");
 
              foreach (var item in inventory)
              {
@@ -125,7 +125,7 @@ namespace BookStoreProject
 
         public async Task AddBookToStoreInventoryFlow()
         {
-            Console.WriteLine("--- ADD BOOK TO STORE INVENTORY ---");
+            Console.WriteLine(" ADD BOOK TO STORE INVENTORY ");
 
             var storeId = await SelectStoreId();
             if (storeId == 0) return;
@@ -155,7 +155,7 @@ namespace BookStoreProject
 
         public async Task RemoveBookFromStoreInventoryFlow()
         {
-            Console.WriteLine("--- REMOVE BOOK FROM STORE INVENTORY ---");
+            Console.WriteLine("=== REMOVE BOOK FROM STORE INVENTORY ===");
 
             var storeId = await SelectStoreId();
             if (storeId == 0) return;
